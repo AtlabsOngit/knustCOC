@@ -1,10 +1,10 @@
 import React from 'react'
 import "../../Styles/landing page/Ministries.css"
 
-function MInistries() {
+function Ministries() {
   return (
     <div>MInistries</div>
   )
 }
 
-export default MInistries
+export default Ministries
