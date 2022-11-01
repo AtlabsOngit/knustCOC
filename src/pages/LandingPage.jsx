@@ -7,7 +7,7 @@ import ContactUs from "../components/landing page/ContactUs"
 import OurBlog from "../components/landing page/OurBlog"
 import Footer from "../components/landing page/Footer"
 import AboutUs from "../components/landing page/AboutUs"
-import 
+
 
 
 function LandingPage() {
