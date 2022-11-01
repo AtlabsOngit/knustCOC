@@ -3,7 +3,10 @@ import "../../Styles/landing page/AboutUs.css"
 
 function AboutUs() {
   return (
-    <div></div>
+    <div>
+
+      hello everyone
+    </div>
   )
 }
 
