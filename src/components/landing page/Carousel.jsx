@@ -13,7 +13,7 @@ function Carousel() {
 
   const timeout = useCallback(setTimeout(() => {
     setCurrentImage((state) => (state + 1) % 5)
-  }, 3000), [currentImage])
+  }, 10000), [currentImage])
 
   const carouselNavRight = () => {
     clearTimeout(timeout)
