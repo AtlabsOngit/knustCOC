@@ -8,52 +8,42 @@ import {useState, useRef, useEffect} from "react"
 import "../../Styles/landing page/Carousel.css"
 
 function Carousel() {  
-  const [images, setImages] = useState({
-    allImages: [carouselImage1, carouselImage2, carouselImage3, carouselImage4, carouselImage5],
-    currentImage: 0
-  })
-
+  const images = useRef([carouselImage1, carouselImage2, carouselImage3, carouselImage4, carouselImage5])
   const carousel = useRef()
-  const currentImage = images.allImages[images.currentImage]
-  let currentImageSlide = useRef()
+  const currentImageSlide = useRef()
+  const overflow = useRef()
+  const [current, setCurrent] = useState(0)
 
   let interval
 
-  console.log("render", images.allImages.indexOf(images.currentImage))
-
-  const resetCarousel = (scrollAmount) => { 
+  const resetCarousel = (scrollAmount) => {
     if (interval) clearInterval(interval)
+
+    const arrangedImages = images.current
+    if (current === 0 && scrollAmount < 0) {
+      overflow.current  = images.current.length - 1
+      arrangedImages.unshift(images.current[overflow.current])
+
+    } else if (current === images.current.length - 1 && scrollAmount > 0) {
+      overflow.current = 0
+      arrangedImages.push(images.current[overflow.current])
+    }
 
     let n
     if (scrollAmount < 0) {
-      n = images.allImages.indexOf(currentImage) - 1
+      n = current - 1
     } else {
-      n = (images.allImages.indexOf(currentImage) + 1) % images.length
+      n = (current + 1) % images.current.length
     }
 
-    const arrangedImages = images.allImages
-    if (images.allImages.indexOf(currentImage) === 0) {
-      const image = arrangedImages.pop()
-      arrangedImages.unshift(image)
-
-    } else if (images.allImages.indexOf(currentImage.current) === images.length - 1) {
-      const image = arrangedImages.shift()
-      arrangedImages.push(image)
-    }
-        
-    setImages({
-      ...images,
-      currentImage: n < 0 ? images.length - 1 : n,
-      allImages: arrangedImages
-    })
-
-    // carousel.current.scrollBy(scrollAmount, 0)
+    images.current = arrangedImages
+    setCurrent(n < 0 ? images.length - 1 : n)
 
     // interval = setInterval(() => {
     //   resetCarousel(carousel.current.clientWidth)
     // }, 10000)
   }
-  
+
   const carouselNavRight = () => {
     resetCarousel(carousel.current.clientWidth)
   }
@@ -63,13 +53,16 @@ function Carousel() {
   }
 
   useEffect(() => {
+    console.log(overflow)
     carousel.current.scrollLeft = currentImageSlide.current.offsetLeft
+
+    // if(overflow.current) images.current.filter((image, index) => index !== overflow.current + 1)
   })
-  
-  return (
+
+  return(
     <div id="top-section">
       <nav id="nav-bar">
-        <img src={COCLogo} alt="" id="church-logo" />
+        <img src={COCLogo} alt="" id="church-logo"/>
         <div id="nav-options-box">
           <a href="/" className="nav-option">Home</a>
           <a href="/" className="nav-option">Sermons</a>
@@ -81,7 +74,7 @@ function Carousel() {
       </nav>
       <div id="carousel">
         <div id="carousel-images-block" ref={carousel}>
-          {images.allImages.map((image, index) => <img key={index} src={image} alt="" className="carousel-image" id={image === currentImage ? "current-image" : ""} ref={image === currentImage? currentImageSlide: null } />)}
+          {images.current.map((image, index) => <img key={index} src={image} alt="" className="carousel-image" ref={image === images.current[current] ? currentImageSlide : null}/>)}
         </div>
         <button id="carousel-nav-right" className="carousel-nav" onClick={carouselNavRight}>&gt;</button>
         <button id="carousel-nav-left" className="carousel-nav" onClick={carouselNavLeft}>&lt;</button>

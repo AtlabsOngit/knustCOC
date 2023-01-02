@@ -74,20 +74,21 @@ a {
     background-color: #000;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
-    justify-content: center;
+    overflow-x: scroll;
 }
 
 .carousel-image {
-    width: 0;
+    min-width: 100%;
     object-fit: cover;
     opacity: 0.4;
-    transition: width 1s linear;
+    /* transition: width 1s linear; */
     scroll-snap-align: start;
 }
 
-#current-carousel-image {
+
+/* #current-carousel-image {
     width: 100%;
-}
+} */
 
 .carousel-nav {
     position: absolute;
