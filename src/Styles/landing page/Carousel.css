@@ -8,13 +8,14 @@ a {
 
 #nav-bar {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0 10px;
     min-height: 80px;
     flex-wrap: wrap;
-    justify-content: space-around;
-    padding-bottom: 10px;
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    margin: auto;
 }
 
 #nav-bar #church-logo {
@@ -24,20 +25,20 @@ a {
 #nav-options-box {
     display: flex;
     gap: 20px;
+    /* flex-wrap: wrap; */
     font-size: 20px;
     align-items: center;
-    /* flex-wrap: wrap; */
     justify-content: right;
+    width: fit-content;
     flex-grow: 1;
     padding: 20px;
-    overflow-x: auto;
 }
 
 .nav-option {
+    /* flex-basis: 100%; */
     display: flex;
     flex-direction: column;
     color: #436FCE;
-    position: relative;
     align-items: center;
     min-width: fit-content;
 }
@@ -55,7 +56,7 @@ a {
     transition: width 0.5s;
 }
 
-#community-nav {
+.community-nav {
     width: 192px;
     height: 50px;
     border-radius: 17px;
@@ -63,6 +64,75 @@ a {
     color: #fff;
     display: flex;
     justify-content: center;
+    opacity: 0.5;
+    backdrop-filter: brightness(0);
+}
+
+.community-nav:hover {
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+#menu {
+    display: none;
+}
+
+#menu-icon {
+    width: 40px;
+    cursor: pointer;
+}
+
+#menu-options {
+    display: none;
+}
+
+@media(max-width:700px) {
+    #menu {
+        display: block;
+    }
+    #menu-options {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        height: 200px;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateY(-100%);
+        z-index: 5;
+        background-color: #fff;
+    }
+    #menu-icon.active+#menu-options {
+        transform: translateY(0%);
+        transition: transform 1s;
+    }
+    #nav-options-box {
+        display: none;
+    }
+    #menu-close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        border-radius: 10%;
+        background-color: #436FCE;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+    }
+    #nav-bar {
+        justify-content: space-between;
+    }
+}
+
+#carousel {
+    position: relative;
 }
 
 #carousel-images-block {
@@ -72,36 +142,30 @@ a {
     height: 70vw;
     width: 100%;
     background-color: #000;
-    scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
-    overflow-x: scroll;
+    overflow-x: hidden;
 }
 
 .carousel-image {
     min-width: 100%;
     object-fit: cover;
     opacity: 0.4;
-    /* transition: width 1s linear; */
     scroll-snap-align: start;
 }
-
-
-/* #current-carousel-image {
-    width: 100%;
-} */
 
 .carousel-nav {
     position: absolute;
     color: #fff;
-    font-size: 60px;
-    font-weight: 1000;
+    font-size: 10vw;
+    font-weight: 500;
     top: 50%;
     transform: translateY(-50%);
     background-color: transparent;
     border: none;
     outline: none;
-    opacity: 0.5;
+    opacity: 0.1;
     transition: opacity 0.8s;
+    cursor: pointer;
 }
 
 .carousel-nav:hover {
@@ -109,9 +173,9 @@ a {
 }
 
 #carousel-nav-right {
-    right: 10%;
+    right: 5%;
 }
 
 #carousel-nav-left {
-    left: 10%;
+    left: 5%;
 }

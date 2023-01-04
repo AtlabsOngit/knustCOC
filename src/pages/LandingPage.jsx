@@ -10,7 +10,7 @@ import AboutUs from "../components/landing page/AboutUs"
 
 function LandingPage() {
     return (
-        <div>
+        <>
             <Carousel />
             <Events />
             <AboutUs />
@@ -19,7 +19,7 @@ function LandingPage() {
             <ContactUs />
             <OurBlog />
             <Footer/>
-        </div>
+        </>
     )
 }
 

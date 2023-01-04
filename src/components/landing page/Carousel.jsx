@@ -4,6 +4,7 @@ import carouselImage3 from "../../assets/images/carousel images/carousel-image-3
 import carouselImage4 from "../../assets/images/carousel images/carousel-image-4.png"
 import carouselImage5 from "../../assets/images/carousel images/carousel-image-5.png"
 import COCLogo from "../../assets/images/COC KNUST LOGO.png"
+import menuIcon from "../../assets/images/menu-icon.svg"
 import {useState, useRef, useEffect} from "react"
 import "../../Styles/landing page/Carousel.css"
 
@@ -11,53 +12,74 @@ function Carousel() {
   const images = useRef([carouselImage1, carouselImage2, carouselImage3, carouselImage4, carouselImage5])
   const carousel = useRef()
   const currentImageSlide = useRef()
-  const overflow = useRef()
+  const timeout = useRef()
+  const ignoreScroll = useRef(false)
+  const menu = useRef()
   const [current, setCurrent] = useState(0)
 
-  let interval
-
+  if (ignoreScroll.current) setTimeout(() => ignoreScroll.current = false, 700)
+  
+  if (timeout.current) clearTimeout(timeout.current)
   const resetCarousel = (scrollAmount) => {
-    if (interval) clearInterval(interval)
 
-    const arrangedImages = images.current
     if (current === 0 && scrollAmount < 0) {
-      overflow.current  = images.current.length - 1
-      arrangedImages.unshift(images.current[overflow.current])
-
+      setCurrent(-1)
+      return
     } else if (current === images.current.length - 1 && scrollAmount > 0) {
-      overflow.current = 0
-      arrangedImages.push(images.current[overflow.current])
+      setCurrent(images.current.length)
+      return
     }
 
     let n
     if (scrollAmount < 0) {
       n = current - 1
-    } else {
+    } else if(scrollAmount > 0){
       n = (current + 1) % images.current.length
     }
 
-    images.current = arrangedImages
-    setCurrent(n < 0 ? images.length - 1 : n)
-
-    // interval = setInterval(() => {
-    //   resetCarousel(carousel.current.clientWidth)
-    // }, 10000)
+    setCurrent(n < 0 ? images.current.length - 1 : n)
   }
 
   const carouselNavRight = () => {
-    resetCarousel(carousel.current.clientWidth)
+    if (!ignoreScroll.current) {
+      resetCarousel(1)
+      ignoreScroll.current = true
+    }
   }
 
   const carouselNavLeft = () => {
-    resetCarousel(-carousel.current.clientWidth)
+    if (!ignoreScroll.current) {
+      resetCarousel(-1)
+      ignoreScroll.current = true
+    }
+  }
+
+  timeout.current = setTimeout(() => carouselNavRight(), 10000)
+
+  const openMenu = (e) => {
+    menu.current.classList.add("active")
+  }
+
+  const closeMenu = () => {
+    menu.current.classList.remove("active")
   }
 
   useEffect(() => {
-    console.log(overflow)
     carousel.current.scrollLeft = currentImageSlide.current.offsetLeft
+    carousel.current.style.scrollBehavior = "smooth"
 
-    // if(overflow.current) images.current.filter((image, index) => index !== overflow.current + 1)
-  })
+    if (current === -1) {
+      setTimeout(() => {
+        carousel.current.style.scrollBehavior = "auto"
+        setCurrent(images.current.length - 1)
+      }, 700)
+    } else if (current === images.current.length) {
+      setTimeout(() => {
+        carousel.current.style.scrollBehavior = "auto"
+        setCurrent(0)
+      }, 700)
+    }
+  }, [current])
 
   return(
     <div id="top-section">
@@ -70,11 +92,24 @@ function Carousel() {
           <a href="/" className="nav-option">Visit Us</a>
           <a href="/" className="nav-option">Contact Us</a>
         </div>
-        <a href="/" className="nav-option" id="community-nav">Community</a>
+        <a href="/" className="nav-option community-nav">Community</a>
+        <div id="menu">
+          <img src={menuIcon} alt="open menu" srcset="" id="menu-icon" onClick={openMenu} ref={menu} />
+          <div id="menu-options">
+            <a href="/" className="nav-option">Home</a>
+            <a href="/" className="nav-option">Sermons</a>
+            <a href="/" className="nav-option">Events</a>
+            <a href="/" className="nav-option">Visit Us</a>
+            <a href="/" className="nav-option">Contact Us</a>
+            <span id="menu-close-btn" onClick={closeMenu}>X</span>
+          </div>
+        </div>
       </nav>
       <div id="carousel">
         <div id="carousel-images-block" ref={carousel}>
-          {images.current.map((image, index) => <img key={index} src={image} alt="" className="carousel-image" ref={image === images.current[current] ? currentImageSlide : null}/>)}
+          <img src={images.current[images.current.length - 1]} alt="" ref={current === -1 ? currentImageSlide : null} className="carousel-image" />
+          {images.current.map((image, index) => <img key={index} src={image} alt="" className="carousel-image" ref={image === images.current[current] ? currentImageSlide : null} />)}
+          <img src={images.current[0]} className="carousel-image" ref={current === images.current.length ? currentImageSlide : null} alt=""/>
         </div>
         <button id="carousel-nav-right" className="carousel-nav" onClick={carouselNavRight}>&gt;</button>
         <button id="carousel-nav-left" className="carousel-nav" onClick={carouselNavLeft}>&lt;</button>
